@@ -1,13 +1,11 @@
 from flask import Flask, render_template, request, redirect, url_for, flash, jsonify
 import json
 from decimal import Decimal
-import os
 
 app = Flask(__name__)
 app.secret_key = 'supersecretkey'
 
-# Define o caminho do arquivo JSON
-JSON_FILE_PATH = 'apuracao_carnaval/api/data.json'
+JSON_FILE_PATH = 'data.json'
 
 def carregar_dados():
     try:
@@ -21,6 +19,9 @@ def carregar_dados():
     except json.JSONDecodeError as e:
         flash(f"Erro ao carregar dados do arquivo JSON: {str(e)}")
         return {'quesitos': [], 'jurados': []}
+
+
+
 
 def salvar_dados(dados):
     try:
@@ -48,7 +49,7 @@ def obter_dados_quesitos():
             soma_geral[escola] = {'nota1': Decimal(0), 'nota2': Decimal(0), 'nota3': Decimal(0), 'nota4': Decimal(0), 'nota5': Decimal(0), 'total': Decimal(0)}
         soma_geral[escola]['nota1'] += Decimal(item['nota1'])
         soma_geral[escola]['nota2'] += Decimal(item['nota2'])
-        soma_geral[escola']['nota3'] += Decimal(item['nota3'])
+        soma_geral[escola]['nota3'] += Decimal(item['nota3'])
         soma_geral[escola]['nota4'] += Decimal(item['nota4'])
         soma_geral[escola]['nota5'] += Decimal(item['nota5'])
         soma_geral[escola]['total'] += total
@@ -58,6 +59,7 @@ def obter_dados_quesitos():
 def obter_dados_jurados():
     dados = carregar_dados()
     return dados.get('jurados', [])
+
 
 @app.route('/', methods=['GET', 'POST'])
 def index():
